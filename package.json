@@ -1,0 +1,19 @@
+{
+  "name": "cryptosky-frontend",
+  "version": "0.0.1",
+  "description": "Electron Desktop App for backend functionality",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/andyjk15/cryptosky-frontend.git"
+  },
+  "author": "Andrew Sotheran",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/andyjk15/cryptosky-frontend/issues"
+  },
+  "homepage": "https://github.com/andyjk15/cryptosky-frontend#readme"
+}

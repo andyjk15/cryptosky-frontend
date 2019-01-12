@@ -1,0 +1,2 @@
+# cryptosky-frontend
+Electron frontend

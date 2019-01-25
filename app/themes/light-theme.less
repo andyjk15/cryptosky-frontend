@@ -1,0 +1,276 @@
+// Colors
+@brand-primary: #383838;
+@gray: #a6abb3;
+@background:  #f5f5f5;
+@container-bg: #C9C9C9;
+@border-color: rgba(193, 193, 193, 0.4);
+@console-bg: #ebebeb;
+@gray-light: lighten(@gray, 15%);
+
+// Button Colors
+@btn-default-color: @gray;
+@btn-default-bg: @gray-light;
+
+// Toggle Sizes
+@toggle-default-size: 1.5rem;
+@toggle-default-label-width: 4rem;
+@toggle-default-font-size: .75rem;
+
+body {
+    font-family: 'Montserrat', 'Lato', 'Open Sans', 'Helvetica Neue', Helvetica, Calibri, Arial, sans-serif;
+    color: @brand-primary;
+    background: @background;
+}
+
+// Mixin for Switch Colors
+// Variables: @color, @bg, @active-bg
+.toggle-color(@color: @btn-default-color; @bg: @btn-default-bg; @active-bg: @brand-primary;) {
+  color: @color;
+  background: @bg;
+  &:before,
+  &:after {
+    color: @color;
+  }
+  &.active {
+    background-color: @active-bg;
+  }
+}
+
+// Mixin for Default Switch Styles
+// Variables: @size, @margin, @color, @bg, @active-bg, @font-size
+.toggle-mixin(@size: @toggle-default-size; @margin: @toggle-default-label-width; @font-size: @toggle-default-font-size;) {
+  // color: @color;
+  // background: @bg;
+  margin: 0 @margin;
+  padding: 0;
+  position: relative;
+  border: none;
+  height: @size;
+  width: @size * 2;
+  border-radius: @size;
+  
+  &:focus,
+  &.focus {
+    &,
+    &.active {
+      outline: none;
+    }
+  }
+  
+  &:before,
+  &:after {
+    line-height: @size;
+    width: @margin;
+    text-align: center;
+    font-weight: 600;
+    // color: @color;
+    font-size: @font-size;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: absolute;
+    bottom: 0;
+    transition: opacity .25s;
+  }
+  &:before {
+    content: 'Light';
+    left: -@margin;
+  }
+  &:after {
+    content: 'Dark';
+    right: -@margin;
+    opacity: .5;
+  }
+  
+  > .handle {
+    position: absolute;
+    top: (@size * .25) / 2;
+    left: (@size * .25) / 2;
+    width: @size * .75;
+    height: @size * .75;
+    border-radius: @size * .75;
+    background: @gray;
+    transition: left .25s;
+  }
+  &.active {
+    transition: background-color .25s;
+    > .handle {
+      left: @size + ((@size * .25) / 2);
+      transition: left .25s;
+    }
+    &:before {
+      opacity: .5;
+    }
+    &:after {
+      opacity: 1;
+    }
+  }
+  
+  &.btn-sm {
+    &:before,
+    &:after {
+      line-height: @size - 2px;
+      color: @gray;
+      letter-spacing: .75px;
+      left: @size * .275;
+      width: @size * 1.55;
+    }
+    &:before {
+      text-align: right;
+    }
+    &:after {
+      text-align: left;
+      opacity: 0;
+    }
+    &.active {
+      &:before {
+        opacity: 0;
+      }
+      &:after {
+        opacity: 1;
+      }
+    }
+  }
+  
+  &.btn-xs {
+    &:before,
+    &:after {
+      display: none;
+    }
+  }
+}
+// Apply Mixin to different sizes & colors
+.btn-toggle {
+  
+  .toggle-mixin;
+  .toggle-color;
+  
+  &.btn-lg {
+    .toggle-mixin(@size: 2.5rem; @font-size: 1rem; @margin: 5rem;);
+  }
+  
+  &.btn-sm {
+    .toggle-mixin(@font-size: .55rem; @margin: .5rem;);
+  }
+  
+  &.btn-xs {
+    .toggle-mixin(@size:1rem;@margin:0;)
+  }
+}
+
+.row-spacing {
+  margin: 0em 1.5em 0em 0.5em;
+}
+
+.component-container {
+  margin: 1.5em 1.5em 0em 1.5em;
+  padding: 1em 0em 1em 0em;
+  background: @container-bg;
+  border-radius: 0.5em;
+  border: 0.3em solid @border-color;
+}
+
+.train-container {
+  margin-top: 1em;
+  padding: 1em 1em 1em 1em;
+  background: @gray;
+  border-radius: 0.5em;
+  border: 0.3em solid @border-color;
+}
+
+.progress {
+  height: 5%;
+}
+
+#alert-start {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  position: fixed; 
+  z-index: 1;
+  right: 2%;
+  top: 7%;
+}
+
+#alert-error {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  position: fixed; 
+  z-index: 1;
+  right: 2%;
+  top: 7%;
+}
+
+#alert-stopped {
+  visibility: hidden;
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  position: fixed; 
+  z-index: 1;
+  right: 2%;
+  top: 7%;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {top: 0; opacity: 0;} 
+  to {top: 7%; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 7%; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 7%; opacity: 1;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 7%; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
+
+.console-component {
+  top: 1em;
+}
+
+.console {
+  margin: auto;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  background: @console-bg;
+  border-radius: 0.5em;
+  border: 0.3em solid @border-color;
+  height: 12.2em;
+  overflow: auto;
+  font-family: Consolas, monaco, monospace;
+  font-size: .90rem;
+}
+
+hr.hr-style {
+	height: 6px;
+	background: url(http://ibrahimjabbari.com/english/images/hr-11.png) repeat-x 0 0;
+  border: 0;
+}

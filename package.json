@@ -19,6 +19,6 @@
   "dependencies": {
     "app-root-path": "^2.1.0",
     "electron": "^4.0.1",
-    "python-shell": "^1.0.7"
+    "zerorpc": "^0.9.8"
   }
 }

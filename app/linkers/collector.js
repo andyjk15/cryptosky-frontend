@@ -1,45 +1,43 @@
-let {PythonShell} = require('python-shell');
 let app_root = require('app-root-path');
+let utility_funcs = require('./utility_funcs');
 
-let options = {
-  mode: 'text',
-  pythonPath: 'path/to/python',
-  pythonOptions: ['-u'], // get print results in real-time
-  scriptPath: 'path/to/my/scripts',
-  args: ['value1', 'value2', 'value3']
-};
-
-function get_sentiment() {
-    alert("BOOP")
+function startCollectors() {
+  alert("Boop");
+  startTweetCollector();
 }
 
 function startTweetCollector() {
 
-  //PythonShell.run('../cryptosky-backend/cryptosky-backend/data_collector/twitter/tweet_collector.py', options, function (err, results) {  //../cryptosky-backend/data_collector/twitter/tweet_collector.py
-  //  if (err) throw err;
-    // results is an array consisting of messages collected during execution
-  //  console.log('results: %j', results);
-  //});
+  try {
+    let process = require('child_process').spawn('python', ['../../tweet_collector.py']);
+    //utility_funcs.sendToConsole("Process started on - ", process.pid);
+    process.stdout.on('data', function(data){
+      console.log(data.toString('utf8'));
+      //utility_funcs.sendToConsole("Data: ", data.toString('utf8'));
 
-  let process = require('child_process').spawn('python', [app_root + '../cryptosky-backend/cryptosky-backend/data_collector/twitter/tweet_collector']);
-  process.stdout.on('data', function(data){
-    console.log("data: ", data.toString('utf8'));
-    //Get element IDs and regex the start of the logs for 'Console:' etc and filter to relevent elements
-    let split = data.toString('utf8').split(":");
-    switch(split[0]) {
-      case 'Console':
-        break;
-      case '':
+      //Get element IDs and regex the start of the logs for 'Console:' etc and filter to relevent elements
+      let split = data.toString('utf8').split(":");
+      switch(split[0]) {
+        case 'Console':
+          break;
+        case 'Uncleaned Tweet':
+          break;
+        case 'Cleaned Tweet':
+         break;
 
-      default:
-        break;
-    }
-
-  });
+        default:
+          break;
+      }
+    });
+  } catch (e) {
+    console.log("Error: %s", e);
+    process.exit();
+  }
+  
 }
 
 function startSentimentCollector() {
-  let process = require('child_process').spawn('python3', [app_root + '../cryptosky-backend/cryptosky-backend/analysis_engine/sentiment_analysis.py']);
+  let process = require('child_process').spawn('python3', [app_root + '../cryptosky-backend/analysis_engine/sentiment_analysis.py']);
   process.stdout.on('data', function(data) {
     console.log("Sentiment: ", data.toString('utf8'));
   });

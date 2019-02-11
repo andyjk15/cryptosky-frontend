@@ -4,3 +4,11 @@ function alertShow(id) {
     x.style.visibility = "visible";
     setTimeout(function(){ x.className = x.className.replace("show", ""); x.style.visibility = "hidden";}, 3000);
 }
+
+//Functions needed by other files - to-be exported
+
+module.exports = {
+    sendToConsole: function(message) {
+        console.log(message)
+    }
+}

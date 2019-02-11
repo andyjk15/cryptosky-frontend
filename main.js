@@ -25,7 +25,7 @@ app.on('ready', function() {
 
   //Start tweet collector
   try {
-    let process = require('child_process').spawn('python', ['tweet_collector.py']); //../cryptosky_backend/data_collector/twitter/tweet_collector.py
+    let process = require('child_process').spawn('python', ['../cryptosky-backend/cryptosky-backend/data_collector/twitter/tweet_collector.py']); //../cryptosky_backend/data_collector/twitter/tweet_collector.py
     
     //utility_funcs.sendToConsole("Process started on - ", process.pid);
 

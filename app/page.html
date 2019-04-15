@@ -1,0 +1,206 @@
+<html>
+  <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+    <!-- Custom CSS themes - Dark and Light themes-->
+    <link rel="stylesheet" href="themes/page.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    
+    <!-- Custom Scripts to run python code -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+	<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+	<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+	<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+	<script src="https://www.amcharts.com/lib/3/themes/dark.js"></script>
+
+	<!-- <script type="text/javascript" src="updating.json"></script> -->
+
+  </head>
+
+  <body>
+  	<div>True and Predict from Start of training to current</div>
+    <div id="chartdiv"></div>
+
+    <div>True and Predict from Start of predictions</div>
+    <div id="start"></div>
+    <script>
+	var chartData = unpack()
+	function unpack() {
+		var boop = {};
+		$.ajax({ 
+    		url: '../../cryptosky-backend/updating.json', 
+    		dataType: 'json', 
+    		type: 'get', 
+    		async: false, 
+    		success: function(json){ 
+        		boop = json;
+        		console.log(boop)
+    		} 
+		});
+		//console.log(boop)
+   	
+   		var chartData = [];
+		for (var i = 0; i < Object.keys(boop).length; i++)
+   			{
+   				chartData.push({
+   					index: boop[i]['index'],
+   					predict: boop[i]['yhat_inverse'],
+   					true: boop[i]['testY_inverse']
+   				});
+   			}
+   		console.log(chartData)
+   		return chartData;
+	};
+
+var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "theme": "dark",
+    "legend": {
+        "useGraphSettings": true
+    },
+    "dataProvider": chartData,
+    "synchronizeGrid":true,
+    "valueAxes": [{
+        "id":"v1",
+        "axisColor": "#FF6600",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "left"
+    }, {
+        "id":"v2",
+        "axisColor": "#FCD202",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "right"
+    }],
+    "graphs": [{
+        "valueAxis": "v1",
+        "lineColor": "#FF6600",
+        "bulletBorderThickness": 1,
+        "title": "True",
+        "valueField": "true",
+    "fillAlphas": 0
+    }, {
+        "valueAxis": "v2",
+        "lineColor": "#FCD202",
+        "title": "Predict",
+        "valueField": "predict",
+    "fillAlphas": 0
+    }],
+    "chartScrollbar": {},
+    "chartCursor": {
+        "cursorPosition": "mouse"
+    },
+    "categoryField": "index",
+    "export": {
+    	"enabled": true,
+        "position": "bottom-right"
+     }
+});
+
+console.log(chart)
+
+chart.addListener("dataUpdated", zoomChart);
+zoomChart();
+
+function zoomChart(){
+    chart.zoomToIndexes(chart.dataProvider.length - 200, chart.dataProvider.length - 1);
+}
+</script>
+  <script>
+	var chartData = unpack()
+	function unpack() {
+		var boop = {};
+		$.ajax({ 
+    		url: '../../cryptosky-backend/from_start.json', 
+    		dataType: 'json', 
+    		type: 'get', 
+    		async: false, 
+    		success: function(json){ 
+        		boop = json;
+        		console.log(boop)
+    		} 
+		});
+		//console.log(boop)
+   	
+   		var chartData = [];
+		for (var i = 0; i < Object.keys(boop).length; i++)
+   			{
+   				chartData.push({
+   					index: boop[i]['index'],
+   					predict: boop[i]['yhat_inverse'],
+   					true: boop[i]['testY_inverse']
+   				});
+   			}
+   		console.log(chartData)
+   		return chartData;
+	};
+
+var chart = AmCharts.makeChart("start", {
+    "type": "serial",
+    "theme": "dark",
+    "legend": {
+        "useGraphSettings": true
+    },
+    "dataProvider": chartData,
+    "synchronizeGrid":true,
+    "valueAxes": [{
+        "id":"v1",
+        "axisColor": "#FF6600",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "left"
+    }, {
+        "id":"v2",
+        "axisColor": "#FCD202",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "right"
+    }],
+    "graphs": [{
+        "valueAxis": "v1",
+        "lineColor": "#FF6600",
+        "bulletBorderThickness": 1,
+        "title": "True",
+        "valueField": "true",
+    "fillAlphas": 0
+    }, {
+        "valueAxis": "v2",
+        "lineColor": "#FCD202",
+        "title": "Predict",
+        "valueField": "predict",
+    "fillAlphas": 0
+    }],
+    "chartScrollbar": {},
+    "chartCursor": {
+        "cursorPosition": "mouse"
+    },
+    "categoryField": "index",
+    "export": {
+    	"enabled": true,
+        "position": "bottom-right"
+     }
+});
+
+console.log(chart)
+
+chart.addListener("dataUpdated", zoomChart);
+zoomChart();
+
+function zoomChart(){
+    chart.zoomToIndexes(chart.dataProvider.length - 200, chart.dataProvider.length - 1);
+}
+</script>
+  <body>
+
+
+</html>

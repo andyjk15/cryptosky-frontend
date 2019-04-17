@@ -21,29 +21,78 @@
 	<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 	<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 	<script src="https://www.amcharts.com/lib/3/themes/dark.js"></script>
+    <script src="table.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
 
-	<!-- <script type="text/javascript" src="updating.json"></script> -->
+    <script>
+        function arrayToTable(tableData) {
+            var table = $('<table cellpadding="0" cellspacing="0" border="0"></table');
+            $(tableData).each(function (i, rowData) {
+                var row = $('<tr></tr>');
+                $(rowData).each(function (j, cellData) {
+                    row.append($('<td>'+cellData+'</td>'));
+                });
+                table.append(row);
+            });
+             //var section = "<section><h1>Fixed Table header</h1><div class="tbl-header"><table cellpadding="0" cellspacing="0" border="0"><thead><tr><th>Created At</th><th>Next Hour Price</th><th>Current Price</th><th>Current Sentiment</th><th>Change %</th></tr></thead></table></div><div class="tbl-content">"+ table[0] + "</div></section";
+            console.log(table)
+            //tab = table[0];
+            //boop = JSON.stringify(tab)
+            //console.log(String tab);
+            //console.log(boop);
+            //console.log(section);
+            return table;
+        }
 
+        $.ajax({
+            type: "GET",
+            url: "predictions.csv",
+            success: function (data) {
+                $('body').append(arrayToTable(Papa.parse(data).data));
+            }
+        });
+    </script>
+
+    <!-- Fathom - simple website analytics - https://github.com/usefathom/fathom -->
+    <script>
+        (function(f, a, t, h, o, m){
+	        a[h]=a[h]||function(){
+		    (a[h].q=a[h].q||[]).push(arguments)
+	    };
+	    o=f.createElement('script'),
+	    m=f.getElementsByTagName('script')[0];
+	    o.async=1; o.src=t; o.id='fathom-script';
+	    m.parentNode.insertBefore(o,m)
+        })(document, window, '//fathom.cryptosky.me/tracker.js', 'fathom');
+        fathom('set', 'siteId', 'EKSLJ');
+        fathom('trackPageview');
+    </script>
+<!-- / Fathom -->
   </head>
 
   <body>
-  	<div>True and Predict from Start of training to current</div>
+      <h1 style="padding-top:50px;">True and Predict from Start of training to current</h1>
     <div id="chartdiv"></div>
-
-    <div>True and Predict from Start of predictions</div>
+    <h1>True and Predict without Sentiment</h1>
+    <div id="nosent"></div>
+    <h1>True and Predict from Start of predictions</h1>
     <div id="start"></div>
+
+    <section>
+  <!--for demo wrap-->
+  <h1>Predictions</h1>
+    </section>
     <script>
 	var chartData = unpack()
 	function unpack() {
 		var boop = {};
 		$.ajax({ 
-    		url: '../../cryptosky-backend/updating.json', 
+    		url: 'updating.json', 
     		dataType: 'json', 
     		type: 'get', 
     		async: false, 
     		success: function(json){ 
         		boop = json;
-        		console.log(boop)
     		} 
 		});
 		//console.log(boop)
@@ -57,7 +106,6 @@
    					true: boop[i]['testY_inverse']
    				});
    			}
-   		console.log(chartData)
    		return chartData;
 	};
 
@@ -113,7 +161,7 @@ chart.addListener("dataUpdated", zoomChart);
 zoomChart();
 
 function zoomChart(){
-    chart.zoomToIndexes(chart.dataProvider.length - 200, chart.dataProvider.length - 1);
+    chart.zoomToIndexes(chart.dataProvider.length - 20, chart.dataProvider.length - 1);
 }
 </script>
   <script>
@@ -121,13 +169,12 @@ function zoomChart(){
 	function unpack() {
 		var boop = {};
 		$.ajax({ 
-    		url: '../../cryptosky-backend/from_start.json', 
+    		url: 'from_start.json', 
     		dataType: 'json', 
     		type: 'get', 
     		async: false, 
     		success: function(json){ 
         		boop = json;
-        		console.log(boop)
     		} 
 		});
 		//console.log(boop)
@@ -141,7 +188,6 @@ function zoomChart(){
    					true: boop[i]['testY_inverse']
    				});
    			}
-   		console.log(chartData)
    		return chartData;
 	};
 
@@ -155,27 +201,27 @@ var chart = AmCharts.makeChart("start", {
     "synchronizeGrid":true,
     "valueAxes": [{
         "id":"v1",
-        "axisColor": "#FF6600",
+        "axisColor": "#33E0FF",
         "axisThickness": 2,
         "axisAlpha": 1,
         "position": "left"
     }, {
         "id":"v2",
-        "axisColor": "#FCD202",
+        "axisColor": "#FF335B",
         "axisThickness": 2,
         "axisAlpha": 1,
         "position": "right"
     }],
     "graphs": [{
         "valueAxis": "v1",
-        "lineColor": "#FF6600",
+        "lineColor": "#33E0FF",
         "bulletBorderThickness": 1,
         "title": "True",
         "valueField": "true",
     "fillAlphas": 0
     }, {
         "valueAxis": "v2",
-        "lineColor": "#FCD202",
+        "lineColor": "#FF335B",
         "title": "Predict",
         "valueField": "predict",
     "fillAlphas": 0
@@ -197,10 +243,93 @@ chart.addListener("dataUpdated", zoomChart);
 zoomChart();
 
 function zoomChart(){
-    chart.zoomToIndexes(chart.dataProvider.length - 200, chart.dataProvider.length - 1);
+    chart.zoomToIndexes(chart.dataProvider.length - 20, chart.dataProvider.length - 1);
 }
 </script>
-  <body>
+<script>
+	var chartData = unpack()
+	function unpack() {
+		var boop = {};
+		$.ajax({ 
+    		url: 'no_sent.json', 
+    		dataType: 'json', 
+    		type: 'get', 
+    		async: false, 
+    		success: function(json){ 
+        		boop = json;
+    		} 
+		});
+		//console.log(boop)
+   	
+   		var chartData = [];
+		for (var i = 0; i < Object.keys(boop).length; i++)
+   			{
+   				chartData.push({
+   					index: boop[i]['index'],
+   					predict: boop[i]['yhat_inverse'],
+   					true: boop[i]['testY_inverse']
+   				});
+   			}
+   		return chartData;
+	};
+
+var chart = AmCharts.makeChart("nosent", {
+    "type": "serial",
+    "theme": "dark",
+    "legend": {
+        "useGraphSettings": true
+    },
+    "dataProvider": chartData,
+    "synchronizeGrid":true,
+    "valueAxes": [{
+        "id":"v1",
+        "axisColor": "#33E0FF",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "left"
+    }, {
+        "id":"v2",
+        "axisColor": "#FF335B",
+        "axisThickness": 2,
+        "axisAlpha": 1,
+        "position": "right"
+    }],
+    "graphs": [{
+        "valueAxis": "v1",
+        "lineColor": "#33E0FF",
+        "bulletBorderThickness": 1,
+        "title": "True",
+        "valueField": "true",
+    "fillAlphas": 0
+    }, {
+        "valueAxis": "v2",
+        "lineColor": "#FF335B",
+        "title": "Predict",
+        "valueField": "predict",
+    "fillAlphas": 0
+    }],
+    "chartScrollbar": {},
+    "chartCursor": {
+        "cursorPosition": "mouse"
+    },
+    "categoryField": "index",
+    "export": {
+    	"enabled": true,
+        "position": "bottom-right"
+     }
+});
+
+console.log(chart)
+
+chart.addListener("dataUpdated", zoomChart);
+zoomChart();
+
+function zoomChart(){
+    chart.zoomToIndexes(chart.dataProvider.length - 20, chart.dataProvider.length - 1);
+}
+</script>
+  
+<body>
 
 
 </html>

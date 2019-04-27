@@ -40,7 +40,7 @@
 
         $.ajax({
             type: "GET",
-            url: "metrics.csv",
+            url: "no_sent_metrics.csv",
             success: function (data) {
                 $('.tbl-metrics').append(arrayToTable(Papa.parse(data).data));
             }
@@ -63,7 +63,7 @@
 
         $.ajax({
             type: "GET",
-            url: "predictions.csv",
+            url: "predictions_notsent.csv",
             success: function (data) {
                 $('#tbl-content').append(arrayToTable(Papa.parse(data).data));
             }
@@ -88,6 +88,7 @@
   </head>
 
   <body>
+    <h1>With No Sentiment</h1>
     <h1 style="padding-top:50px;">True and Predict from Start of training to current</h1>
     <div id="chartdiv"></div>
     <h1>True and Predict from Start of predictions</h1>
@@ -103,7 +104,6 @@
                      <th>Created At</th>
                      <th>Next Hour Price</th>
                      <th>Current Price</th>
-                     <th>Current Sentiment</th>
                      <th>Predicted Action</th>
                  </tr>
              </thead>
@@ -142,7 +142,7 @@
 	function unpack() {
 		var boop = {};
 		$.ajax({ 
-    		url: 'updating.json', 
+    		url: 'no_sent_updating.json', 
     		dataType: 'json', 
     		type: 'get', 
     		async: false, 
@@ -224,7 +224,7 @@ function zoomChart(){
 	function unpack() {
 		var boop = {};
 		$.ajax({ 
-    		url: 'from_start.json', 
+    		url: 'no_sent_from_start.json', 
     		dataType: 'json', 
     		type: 'get', 
     		async: false, 
@@ -306,7 +306,7 @@ function zoomChart(){
 	function unpack() {
 		var boop = {};
 		$.ajax({ 
-    		url: 'metrics_combined.json', 
+    		url: 'no_sent_metrics_combined.json', 
     		dataType: 'json', 
     		type: 'get', 
     		async: false, 
@@ -445,6 +445,4 @@ function zoomChart(){
 }
 </script>
 <body>
-
-
 </html>
